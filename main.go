@@ -26,7 +26,7 @@ func (m MacosPowermetricsPlugin) GraphDefinition() map[string]mp.Graphs {
 	// CPU frequency metrics
 	freq_metrics := []mp.Metrics{}
 	for key, _ := range stat {
-		re := regexp.MustCompile(`frequency.(cpu[0-9]+)`)
+		re := regexp.MustCompile(`frequency\.(cpu[0-9]+)`)
 		res := re.FindStringSubmatch(key)
 		if res != nil {
 			// 	{Name: "frequency.cpu0", Label: "CPU0 Frequency MHz", Diff: false},
@@ -37,7 +37,7 @@ func (m MacosPowermetricsPlugin) GraphDefinition() map[string]mp.Graphs {
 	// CPU residency metrics
 	res_metrics := []mp.Metrics{}
 	for key, _ := range stat {
-		re := regexp.MustCompile(`residency.(cpu[0-9]+)`)
+		re := regexp.MustCompile(`residency\.(cpu[0-9]+)`)
 		res := re.FindStringSubmatch(key)
 		if res != nil {
 			// 	{Name: "residency.cpu0", Label: "CPU0 Residency", Diff: false},
@@ -48,7 +48,7 @@ func (m MacosPowermetricsPlugin) GraphDefinition() map[string]mp.Graphs {
 	// cluster residency metrics
 	cluster_res_metrics := []mp.Metrics{}
 	for key, _ := range stat {
-		re := regexp.MustCompile(`cluster_residency.([^-]+-Cluster)`)
+		re := regexp.MustCompile(`cluster_residency\.([^-]+-Cluster)`)
 		res := re.FindStringSubmatch(key)
 		if res != nil {
 			// 	{Name: "cluster_residency.E-Cluster", Label: "E-Cluster Residency", Diff: false},

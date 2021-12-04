@@ -45,6 +45,17 @@ func (m MacosPowermetricsPlugin) GraphDefinition() map[string]mp.Graphs {
 		}
 	}
 
+	// cluster residency metrics
+	cluster_res_metrics := []mp.Metrics{}
+	for key, _ := range stat {
+		re := regexp.MustCompile(`cluster_residency.([^-]+-Cluster)`)
+		res := re.FindStringSubmatch(key)
+		if res != nil {
+			// 	{Name: "cluster_residency.E-Cluster", Label: "E-Cluster Residency", Diff: false},
+			cluster_res_metrics = append(cluster_res_metrics, mp.Metrics{Name: key, Label: fmt.Sprintf("%s Residency", res[1])})
+		}
+	}
+
 	return map[string]mp.Graphs{
 		"frequency": {
 			Label:   labelPrefix + " CPU Frequency",
@@ -55,6 +66,11 @@ func (m MacosPowermetricsPlugin) GraphDefinition() map[string]mp.Graphs {
 			Label:   labelPrefix + " CPU Residency %",
 			Unit:    mp.UnitPercentage,
 			Metrics: res_metrics,
+		},
+		"cluster_residency": {
+			Label:   labelPrefix + " Cluster Residency %",
+			Unit:    mp.UnitPercentage,
+			Metrics: cluster_res_metrics,
 		},
 	}
 }
@@ -99,6 +115,18 @@ func parsePowermetrics(output string) (map[string]float64, error) {
 				return nil, fmt.Errorf("failed to parse CPU residency: %s", err)
 			}
 			k := fmt.Sprintf("residency.cpu%s", res[1])
+			ret[k] = residency
+		}
+
+		// Cluster residency
+		re = regexp.MustCompile(`^([^-]+-Cluster) HW active residency: +([0-9\.]+)%`)
+		res = re.FindStringSubmatch(line)
+		if res != nil {
+			residency, err := strconv.ParseFloat(res[2], 64)
+			if err != nil {
+				return nil, fmt.Errorf("failed to parse cluster residency: %s", err)
+			}
+			k := fmt.Sprintf("cluster_residency.%s", res[1])
 			ret[k] = residency
 		}
 

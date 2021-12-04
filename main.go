@@ -60,7 +60,6 @@ func (m MacosPowermetricsPlugin) GraphDefinition() map[string]mp.Graphs {
 }
 
 func (m MacosPowermetricsPlugin) FetchMetrics() (map[string]float64, error) {
-	//output, err := exec.Command("cat", "/Users/wtatsuru/ws/powermetrics").Output()
 	output, err := exec.Command("powermetrics", "--samplers", "cpu_power", "-i", "1000", "-n", "1").Output()
 	if err != nil {
 		return nil, fmt.Errorf("Failed to execute powermetrics command: %s", err)

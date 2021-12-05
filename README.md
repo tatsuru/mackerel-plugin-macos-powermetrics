@@ -1,6 +1,22 @@
-# Mackerel Plugin for MacOS by powermetrics(1) command
+# mackerel-plugin-macos-powermetrics
 
-Mackerel Plugin for MacOS by powermetrics(1) command.
+Mackerel metric plugin for MacOS system metrics.
+
+## Usage
+
 must be invoked as superuser.
+
+```
+Usage:
+  ./mackerel-plugin-macos-powermetrics
+
+Options:
+  -metric-key-prefix string
+        Metric key prefix (default "powermetrics")
+  -tempfile string
+        Temp file name
+  -h, --help
+        show help
+```
 
 
